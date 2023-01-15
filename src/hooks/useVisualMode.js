@@ -6,12 +6,10 @@ export default function useVisualMode(initial) {
 
   const transition = function (newMode, replace = false) {
     if (replace) {
-      // history[history.length - 1] = newMode;//needs to be replaced
       setHistory(prev => {
         const newHistory = [...prev]
         newHistory.pop()
-        newHistory.push(mode)
-        console.log("replacing:", history)
+        newHistory.push(newMode)
         return newHistory
       });
       setMode(newMode);
@@ -21,14 +19,15 @@ export default function useVisualMode(initial) {
     }
   }
 
+
   const back = function () {
     if (history.length === 1) return;
-    history.pop(); //needs to be replaced
-    // setHistory((current) => {
-    //   current.splice(current.length - 1, 1)
-    //   return current;
-    // });
-    setMode(history[history.length - 1]);
+    setMode(history[history.length - 2]);
+    setHistory(prev => {
+      const newHistory = [...prev]
+      newHistory.pop();
+      return newHistory;
+    });
   }
 
   return { mode, transition, back };
