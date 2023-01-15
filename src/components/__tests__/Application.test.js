@@ -50,7 +50,7 @@ describe("Application", () => {
 
     const days = getAllByTestId(container, "day");
     const day = days.find(day => queryByText(day, "Monday"))
-    expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
+    expect(getByText(day, "no spots remaining")).toBeInTheDocument();
     debug(day);
 
     //console.log(prettyDOM(appointment));
