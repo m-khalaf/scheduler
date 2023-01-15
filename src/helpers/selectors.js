@@ -27,3 +27,10 @@ export function getInterview(state, interview) {
   return result;
 }
 
+export function findDayId(aptId, days) {
+  for (let day of days) {
+    if (day.appointments.includes(aptId)) {
+      return day.id
+    }
+  }
+}
