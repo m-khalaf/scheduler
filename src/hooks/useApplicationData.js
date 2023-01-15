@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import {findDayId} from "helpers/selectors";
 
 export default function useApplicationData() {
 
@@ -23,7 +24,7 @@ export default function useApplicationData() {
     });
   }, [])
 
- 
+
 
   const bookInterview = function (id, interview) {
 
@@ -37,11 +38,31 @@ export default function useApplicationData() {
       [id]: appointment
     };
 
+    const updateSpotsRemaining = function(aptId){
+      const dayID = findDayId(aptId, state.days) - 1; //grab the day id
+      const day = {     //clone the updated day and change the spots
+        ...state.days[dayID],
+        spots: state.days[dayID].spots-1
+      }
+  
+      const days = [...state.days] ;   //clone days array and update the changed day
+      days[dayID] = day;
+
+      return days
+    }
+
+    const days = updateSpotsRemaining(id)
+    
+
+  
+
     return axios.put(`/api/appointments/${id}`, appointment)
       .then(() => {
         setState({
           ...state,
-          appointments
+          appointments,
+          days
+
         })
       })
   };
@@ -58,11 +79,26 @@ export default function useApplicationData() {
       [id]: appointment
     };
 
+    const updateSpotsRemaining = function(aptId){
+      const dayID = findDayId(aptId, state.days) - 1; //grab the day id
+      const day = {     //clone the updated day and change the spots
+        ...state.days[dayID],
+        spots: state.days[dayID].spots+1
+      }
+  
+      const days = [...state.days] ;   //clone days array and update the changed day
+      days[dayID] = day;
+
+      return days
+    }
+    const days = updateSpotsRemaining(id)
+
     return axios.delete(`/api/appointments/${id}`)
       .then(() => {
         setState({
           ...state,
-          appointments
+          appointments,
+          days
         })
       })
   };
