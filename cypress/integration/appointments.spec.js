@@ -1,15 +1,11 @@
 const { CYCLIC_KEY } = require("@storybook/addon-actions");
 
 describe("Appointments", () => {
-
   beforeEach(() => {
-
     cy.request("GET", "/api/debug/reset");
     cy.visit("/");
     cy.contains("Tuesday");
   });
-
-
 
   xit("should book an interview", () => {
     cy.get("[alt=Add]").first().click();
@@ -35,8 +31,5 @@ describe("Appointments", () => {
     cy.contains("DELETING").should("exist");
     cy.contains("DELETING").should("not.exist");
     cy.contains(".appointment__card--show", "Archie Cohen").should("not.exist");
-  })
-
-
-
+  });
 });
