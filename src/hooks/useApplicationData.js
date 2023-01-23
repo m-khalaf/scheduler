@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { findDayId } from "helpers/selectors";
+import { findDayId, getAppointmentsForDay } from "helpers/selectors";
 
 export default function useApplicationData() {
   const [state, setState] = useState({
@@ -38,12 +38,21 @@ export default function useApplicationData() {
       [id]: appointment,
     };
 
+    const newState = {
+      ...state,
+      appointments,
+    };
+
     const updateSpotsRemaining = function (aptId) {
       const dayID = findDayId(aptId, state.days) - 1; //grab the day id
       const day = {
         //clone the updated day and change the spots
         ...state.days[dayID],
-        spots: state.days[dayID].spots - 1,
+        spots:
+          getAppointmentsForDay(newState, newState.days[dayID].name).length -
+          getAppointmentsForDay(newState, newState.days[dayID].name).filter(
+            (x) => Boolean(x.interview)
+          ).length,
       };
 
       const days = [...state.days]; //clone days array and update the changed day
@@ -52,12 +61,10 @@ export default function useApplicationData() {
       return days;
     };
 
-    const days = updateSpotsRemaining(id);
-
     return axios.put(`/api/appointments/${id}`, appointment).then(() => {
+      const days = updateSpotsRemaining(id);
       setState({
-        ...state,
-        appointments,
+        ...newState,
         days,
       });
     });
