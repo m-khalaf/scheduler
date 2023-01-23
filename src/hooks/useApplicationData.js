@@ -39,6 +39,7 @@ export default function useApplicationData() {
     };
 
     const newState = {
+      // create a new object that has the new state to pass it to the function
       ...state,
       appointments,
     };
