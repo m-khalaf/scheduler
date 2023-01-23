@@ -9,6 +9,7 @@ export default function Form(props) {
 
   const reset = () => {
     setStudent("");
+    setStudent(null);
   };
   const cancel = () => {
     reset();
